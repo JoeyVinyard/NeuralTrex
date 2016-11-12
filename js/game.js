@@ -502,7 +502,8 @@ Runner.prototype = {
    * Update the game frame.
    */
   update: function() {
-    neuralTick(this.currentSpeed);
+    if(this.started)
+      neuralTick(this.currentSpeed,this.obstacles);
 
     this.drawPending = false;
 
@@ -519,10 +520,6 @@ Runner.prototype = {
 
       this.runningTime += deltaTime;
       var hasObstacles = this.runningTime > this.config.CLEAR_TIME;
-
-      if(hasObstacles){
-        neuralObstacles(this.horizon.obstacles);
-      }
 
       // First jump triggers the intro.
       if (this.tRex.jumpCount == 1 && !this.playingIntro) {
@@ -803,7 +800,6 @@ Runner.prototype = {
       this.paused = false;
       this.tRex.update(0, Trex.status.RUNNING);
       this.time = getTimeStamp();
-      neuralTick();
       this.update();
     }
   },
