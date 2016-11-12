@@ -502,6 +502,8 @@ Runner.prototype = {
    * Update the game frame.
    */
   update: function() {
+    neuralTick();
+    
     this.drawPending = false;
 
     var now = getTimeStamp();
@@ -764,6 +766,7 @@ Runner.prototype = {
     this.distanceMeter.acheivement = false;
 
     this.tRex.update(100, Trex.status.CRASHED);
+    neuralDied();
     this.restart();
     // Game over panel.
     if (!this.gameOverPanel) {

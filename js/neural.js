@@ -1,7 +1,6 @@
-function neuralGameOver(){
-	console.log("Auto restart");
-	// Runner.restart();
-}
 function neuralTick(){
+	console.log("Tick");
+}
+function neuralDied(){
 
 }
