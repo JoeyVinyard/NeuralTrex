@@ -502,8 +502,8 @@ Runner.prototype = {
    * Update the game frame.
    */
   update: function() {
-    neuralTick();
-    
+    neuralTick(this.currentSpeed);
+
     this.drawPending = false;
 
     var now = getTimeStamp();
@@ -519,6 +519,10 @@ Runner.prototype = {
 
       this.runningTime += deltaTime;
       var hasObstacles = this.runningTime > this.config.CLEAR_TIME;
+
+      if(hasObstacles){
+        neuralObstacles(this.horizon.obstacles);
+      }
 
       // First jump triggers the intro.
       if (this.tRex.jumpCount == 1 && !this.playingIntro) {
@@ -757,7 +761,6 @@ Runner.prototype = {
    */
   gameOver: function() {
     console.log("Game over");
-    this.restart();
     this.playSound(this.soundFx.HIT);
     vibrate(200);
 
@@ -766,7 +769,7 @@ Runner.prototype = {
     this.distanceMeter.acheivement = false;
 
     this.tRex.update(100, Trex.status.CRASHED);
-    neuralDied();
+    neuralDied(this.distanceRan);
     this.restart();
     // Game over panel.
     if (!this.gameOverPanel) {
