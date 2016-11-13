@@ -20,7 +20,7 @@ var nextGen = [];
 
 var count = 0;
 
-const NUM_PER_GEN = 20;
+const NUM_PER_GEN = 100;
 
 function neuralTick(s,d){
 	if(d==undefined||d==null)

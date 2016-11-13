@@ -765,7 +765,7 @@ Runner.prototype = {
     this.distanceMeter.acheivement = false;
 
     this.tRex.update(100, Trex.status.CRASHED);
-    neuralDied(this.distanceRan);
+    trexDied(this.distanceRan,this.distanceMeter.getActualDistance(this.distanceRan));
     this.restart();
     // Game over panel.
     if (!this.gameOverPanel) {
