@@ -1,3 +1,9 @@
+var max = {
+	generation: 1,
+	organism: 1,
+	distance: 0
+}
+
 var chromosome = {
 	jumpDistance: Math.floor(Math.random()*440),
 	distanceRan : 0,
@@ -21,7 +27,12 @@ function neuralTick(s,d){
 	simulate(s,d.xPos);
 }
 function neuralDied(r){
-	//console.log(r);
+	if(r>max.distance){
+		max.distance=r;
+		max.generation = generation;
+		max.organism = count+1;
+		document.getElementById("high").innerHTML = "Furthest distance was " + max.distance.toFixed(0) + " achieved by Organism " + max.organism + " of Generation " + max.generation;
+	}
 	chromosomes[count].distanceRan = r;
 	if(count == chromosomes.length-1){
 		killHalf();
@@ -29,17 +40,18 @@ function neuralDied(r){
 		chromosomes = [];
 		chromosomes = nextGen;
 		generation++;
-		console.log(nextGen);
+		document.getElementById("gen").innerHTML = "Generation : #"+generation;
 		nextGen = [];
 	}
 	count++;
+	document.getElementById("org").innerHTML = "Organism: #"+(count+1);
 }
 function simulate(s,d){
 	if(isWithinFive(d,Math.floor(chromosomes[count].getFinalJumpDistance(s))))
 		simJump();
 }
 function isWithinFive(d,p){
-	if(p>d-5)
+	if(p>d-5&&p<d+20)
 		return true;
 	else
 		return false;
@@ -99,5 +111,5 @@ function simJump(){
 	event.metaKey = false;
 	document.dispatchEvent(event);
 }
-
+document.getElementById("org").innerHTML = "Organism: #"+(count+1)
 makeFirstGeneration();

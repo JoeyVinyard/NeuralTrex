@@ -779,7 +779,7 @@ Runner.prototype = {
     // Update the high score.
     if (this.distanceRan > this.highestScore) {
       this.highestScore = Math.ceil(this.distanceRan);
-      this.distanceMeter.setHighScore(this.highestScore);
+      //this.distanceMeter.setHighScore(this.highestScore);
     }
 
     // Reset the time clock.
@@ -2061,7 +2061,7 @@ DistanceMeter.prototype = {
     var highScoreStr = (this.defaultString +
         distance).substr(-this.maxScoreUnits);
 
-    this.highScore = ['10', '11', ''].concat(highScoreStr.split(''));
+    // this.highScore = ['10', '11', ''].concat(highScoreStr.split(''));
   },
 
   /**
