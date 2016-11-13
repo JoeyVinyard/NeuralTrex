@@ -503,7 +503,7 @@ Runner.prototype = {
    */
   update: function() {
     if(this.started)
-      neuralTick(this.currentSpeed,this.obstacles);
+      neuralTick(this.currentSpeed,this.horizon.obstacles[0],this.obstacles[0]);
 
     this.drawPending = false;
 
@@ -757,7 +757,6 @@ Runner.prototype = {
    * Game over state.
    */
   gameOver: function() {
-    console.log("Game over");
     this.playSound(this.soundFx.HIT);
     vibrate(200);
 
@@ -806,7 +805,6 @@ Runner.prototype = {
 
   restart: function() {
     if (!this.raqId) {
-      console.log("Restart");
       this.playCount++;
       this.runningTime = 0;
       this.activated = true;
@@ -1432,8 +1430,8 @@ Obstacle.types = [
     type: 'PTERODACTYL',
     width: 46,
     height: 40,
-    yPos: [ 100, 75, 50 ], // Variable height.
-    yPosMobile: [ 100, 50 ], // Variable height mobile.
+    yPos: [ 100 ], // Variable height.
+    yPosMobile: [ 100 ], // Variable height mobile.
     multipleSpeed: 999,
     minSpeed: 8.5,
     minGap: 150,

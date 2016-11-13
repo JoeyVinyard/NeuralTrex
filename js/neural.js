@@ -1,58 +1,95 @@
-const ORGS_PER_GEN = 20;
-var count = 0;
-var generation = 0;
-
-var organism = {
-	generation: 0,
-	distance: 0,
-	firstWeights: [],
-	secondWeights: []
+var chromosome = {
+	jumpDistance: Math.floor(Math.random()*440),
+	distanceRan : 0,
+	speedJumpModifier: Math.random()*2,
+	getFinalJumpDistance: function(speed){
+		return this.jumpDistance-(this.speedJumpModifier*speed)
+	}
 }
-var org;
+var generation = 1;
+
+var chromosomes = [];
+var nextGen = [];
+
+var count = 0;
+
+const NUM_PER_GEN = 20;
 
 function neuralTick(s,d){
-	if(d==null)
+	if(d==undefined||d==null)
 		return;
-	network(s,d);
+	simulate(s,d.xPos);
 }
 function neuralDied(r){
+	//console.log(r);
+	chromosomes[count].distanceRan = r;
+	if(count == chromosomes.length-1){
+		killHalf();
+		count = -1;
+		chromosomes = [];
+		chromosomes = nextGen;
+		generation++;
+		console.log(nextGen);
+		nextGen = [];
+	}
 	count++;
-	createNewOrganism();
-	//Assign distance it died at
 }
-function createNewOrganism(){
-	console.log("Creating new organism");
-	org = Object.create(organism);
-	if(generation==0){
-		org.firstWeights= [[Math.random(),Math.random()],
-				  	  [Math.random(),Math.random()],
-				 	  [Math.random(),Math.random()]];
-		org.secondWeights = [Math.random(),Math.random(),Math.random()];
-	}
-}
-function sigmoid(x){
-	return(1/(1+Math.exp(x/-1)));
-}
-function network(s,d){
-	console.log("Networking");
-	var distance = d/440;
-	var speed = s/13;
-	var out = [];
-	for(var i = 0; i < org.firstWeights[0].length; i++){
-		out[i] = sigmoid((d*org.firstWeights[i][0])+(s*org.firstWeights[i][1]));
-	}
-	var tot = 0;
-	for(var i = 0; i < out.length; i++){
-		tot += (out[i]*org.secondWeights[i]);
-	}
-	tot = sigmoid(tot).toFixed(4);
-	if(tot == 0.8000)
+function simulate(s,d){
+	if(isWithinFive(d,Math.floor(chromosomes[count].getFinalJumpDistance(s))))
 		simJump();
-	console.log(tot);
+}
+function isWithinFive(d,p){
+	if(p>d-5)
+		return true;
+	else
+		return false;
+}
+function makeFirstGeneration(){
+	for(var i = 0; i < NUM_PER_GEN; i++){
+		var chro = Object.create(chromosome)
+		chro.jumpDistance = Math.floor(Math.random()*440),
+		chro.speedJumpModifier = Math.random()*2,
+		chromosomes.push(chro);
+	}
+}
+function sortByDistance(){
+	chromosomes.sort(compareByDistance)
+	console.log("Top Trex of generation " + generation + ": ");
+	console.log(chromosomes[0]);
+	// console.log(chromosomes);
+}
+function compareByDistance(a,b){
+	if(a.distanceRan<b.distanceRan)
+		return 1
+	else if(b.distanceRan<a.distanceRan)
+		return -1;
+	else
+		return 0;
+}
+function killHalf(){
+	sortByDistance();
+	chromosomes.splice(chromosomes.length/2,chromosomes.length/2);
+	console.log(chromosomes);
+	for(var i = 0; i < NUM_PER_GEN/2; i++){
+		nextGen.push(chromosomes[i]);
+		mate(chromosomes[i],chromosomes[chromosomes.length-(i+1)]);
+	}
+}
+function mate(a,b){
+	console.log(a);
+	console.log(b);
+	console.log("Mate");
+	var newChro = Object.create(chromosome);
+	newChro.jumpDistance = (a.jumpDistance+b.jumpDistance)/(2*Math.random()*(1.1 - 0.90) + 0.90);
+	newChro.speedJumpModifier = (a.speedJumpModifier+b.speedJumpModifier)/(2*Math.random()*(1.1 - 0.90) + 0.90);
+	if(Math.random()<=0.15){
+		console.log("Mutation!");
+		newChro.jumpDistance*=(Math.random()*2);
+		newChro.speedJumpModifier*=(Math.random()*2);
+	}
+	nextGen.push(newChro);
 }
 function simJump(){
-	createNewOrganism();
-	console.log("Sim");
 	var event = new Event('keydown');
 	event.keyCode = 32;//keys(Runner.keycodes.JUMP)[0];
 	event.which = event.keyCode;
@@ -62,7 +99,5 @@ function simJump(){
 	event.metaKey = false;
 	document.dispatchEvent(event);
 }
-setTimeout(simJump,1000);
-//Two inputs
-//Three hidden nodes
-//One output
+
+makeFirstGeneration();
