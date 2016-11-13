@@ -20,7 +20,7 @@ var nextGen = [];
 
 var count = 0;
 
-const NUM_PER_GEN = 100;
+const NUM_PER_GEN = 20;
 
 function neuralTick(s,d){
 	if(d==undefined||d==null)
@@ -95,9 +95,9 @@ function mate(a,b){
 	console.log(b);
 	console.log("Mate");
 	var newChro = Object.create(chromosome);
-	newChro.jumpDistance = (a.jumpDistance+b.jumpDistance)/(2*Math.random()*(1.1 - 0.90) + 0.90);
-	newChro.speedJumpModifier = (a.speedJumpModifier+b.speedJumpModifier)/(2*Math.random()*(1.1 - 0.90) + 0.90);
-	if(Math.random()<=0.05){
+	newChro.jumpDistance = (a.jumpDistance+b.jumpDistance)/(2*Math.random()*(1.05 - 0.95) + 0.95);
+	newChro.speedJumpModifier = (a.speedJumpModifier+b.speedJumpModifier)/(2*Math.random()*(1.05 - 0.95) + 0.95);
+	if(Math.random()<=0.02){
 		console.log("Mutation!");
 		newChro.jumpDistance*=(Math.random()*2);
 		newChro.speedJumpModifier*=(Math.random()*2);
